@@ -1,0 +1,11 @@
+from instaloader import instaloader,Profile
+L = instaloader.Instaloader()
+USER = "<username>"
+PASSWORD = "<password>"
+L.login(USER, PASSWORD)
+profile = Profile.from_username(L.context, "anacaiaffair")
+list_of_followers = profile.get_followers()
+completed_list  = []
+for follower in list_of_followers:
+  completed_list.append(follower.username)
+print(completed_list)
