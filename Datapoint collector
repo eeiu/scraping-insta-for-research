@@ -1,0 +1,64 @@
+import instaloader
+import csv
+from instaloader import Profile
+
+#function for compiling the biography into a single line----------
+def biocompiler1(*args):
+  storage = []
+  given = ''
+  for i in args:
+    for x in i:
+      if x != "\n":
+        storage.append(x)
+      if x == "\n":
+        storage.append(" ")
+  
+  for i in storage:
+    given += i
+
+  return given
+
+
+def scrape_this(Instagram_username):
+  #Loading some stuff and intialising-------------------------------
+  L = instaloader.Instaloader()
+  target_account = Instagram_username
+  profile = Profile.from_username(L.context, target_account)
+
+  
+  #assigning the variables------------------------------------------
+  target_is_businessacc = profile.is_business_account
+  target_biography = str(biocompiler1(profile.biography))
+  target_full_name = str(profile.full_name)
+  target_is_priv = str(profile.is_private)
+  target_profilepic = str(profile.profile_pic_url)
+  if target_is_businessacc == True: #change is_businessacc to "Yes" or "No"
+    target_is_businessacc = "Yes"
+  else:
+    target_is_businessacc = "No"
+
+  def write_tocsv():
+    counter = 0
+    header = ['row_numer', 'target_account', 'is_businessacc', 'bio', 'full_name', 'is_priv', 'profile_pic']
+    data = [counter, target_account, target_is_businessacc, target_biography, target_full_name, 
+    target_is_priv, target_profilepic]
+
+    #writing the data
+    with open("<PATH TO EMPTY CSV>", 'a', encoding='UTF8') as f:
+      writer = csv.writer(f)
+      #writer.writerow(header)
+      writer.writerow(data)
+
+  write_tocsv()
+  #print("Executed")
+
+list_of_followees = []
+pointer = len(list_of_followees)
+while pointer>0: 
+  for i in list_of_followees:
+    acc_name = i
+    scrape_this(acc_name)
+    print(f"Executed Task number: {pointer}")
+    pointer -= 1
+    
+print("Done!")
